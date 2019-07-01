@@ -4,7 +4,6 @@
  ******************************************************************************/
 package HTNPlanner.PrimitiveTasks;
 
-import EA.Generator;
 import HTNPlanner.AbstractGameState;
 import HTNPlanner.Planner;
 import HTNPlanner.PrimitiveTask;

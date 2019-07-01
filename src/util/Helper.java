@@ -19,23 +19,8 @@ import rts.units.UnitType;
 import util.Pair;
 
 public class Helper {
-	// *****************************
-	//  If you want to run the EA Generator	- set TRAINING_MODE_ON = true
-	// *****************************
-	public static boolean TRAINING_MODE_ON = false;
-	// *****************************
-	//  MUTATE_CONTINUOUSLY = true will change values adding up to +/- 0.2, 
-	//  otherwise the values will be reset to a random value [0.0; 1.0] on mutation
-	// *****************************
-	public static boolean MUTATE_CONTINUOUSLY = false;  
 
-	// *****************************
-	// If you want to read individuals from an archive file - set USE_WEIGHTS_FROM_ARCHIVE = true
-	// *****************************
-	public static boolean USE_WEIGHTS_FROM_ARCHIVE = false;
-	
-	
-	public static int MAP_SIZE = 2;
+	public static int MAP_SIZE = 1;
 
 	public static int DEBUG_INITIALISATION = 0;
 

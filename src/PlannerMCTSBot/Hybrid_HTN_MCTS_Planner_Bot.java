@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import EA.Generator;
 import HTNPlanner.AbstractGameState;
 import HTNPlanner.OrderedPlanner;
 import HTNPlanner.Planner;
@@ -143,12 +142,7 @@ public class Hybrid_HTN_MCTS_Planner_Bot extends NaiveMCTS{
 		// check preconditions for prev. goal - is it still valid/invalid/achieved?
 		if (currentTask != null) {
 			// if achieved - take next task
-			if (currentTask.IsReached(player, 1 - player, gs)) {
-				if (Helper.TRAINING_MODE_ON
-						&& Generator.FUNCTION_CLASS_TO_TRAIN.equals(currentTask.GetTaskEF().getClass())) {
-					Generator.TASK_REACHED = true;
-					return super.getAction(player, gs);
-				}
+			if (currentTask.IsReached(player, 1 - player, gs)) {				
 				// do nothing
 			}
 			// if still valid - proceed with MCTS
@@ -158,27 +152,6 @@ public class Hybrid_HTN_MCTS_Planner_Bot extends NaiveMCTS{
 			// if invalid
 			else {
 				replan = true;
-
-				if (Helper.TRAINING_MODE_ON
-						&& Generator.FUNCTION_CLASS_TO_TRAIN.equals(currentTask.GetTaskEF().getClass())
-						&& Generator.TASK_START_FRAME >= 0) {
-					Generator.TASK_FAILED = true;
-				}
-			}
-
-			if (Helper.TRAINING_MODE_ON && Generator.FUNCTION_CLASS_TO_TRAIN.equals(PreventAttackAllEF.class)
-					&& (currentTask.GetTaskEF().getClass().equals(AttackAllEF.class)
-							|| currentTask.GetTaskEF().getClass().equals(AttackMilitaryEF.class)
-							|| currentTask.GetTaskEF().getClass().equals(PreventAttackMilitaryEF.class))) {
-				System.out.println("attack or diff. prevent started, no prevent");
-				Generator.TASK_FAILED = true;
-			}
-			if (Helper.TRAINING_MODE_ON && Generator.FUNCTION_CLASS_TO_TRAIN.equals(PreventAttackMilitaryEF.class)
-					&& (currentTask.GetTaskEF().getClass().equals(AttackAllEF.class)
-							|| currentTask.GetTaskEF().getClass().equals(AttackMilitaryEF.class)
-							|| currentTask.GetTaskEF().getClass().equals(PreventAttackAllEF.class))) {
-				System.out.println("attack or diff. prevent started, no prevent");
-				Generator.TASK_FAILED = true;
 			}
 		}
 
@@ -213,43 +186,16 @@ public class Hybrid_HTN_MCTS_Planner_Bot extends NaiveMCTS{
 						System.out.println("EF: " + this.ef.toString());
 					}
 					decisionMade = true;
-
-					if (Helper.TRAINING_MODE_ON
-							&& Generator.FUNCTION_CLASS_TO_TRAIN.equals(currentTask.GetTaskEF().getClass())) {
-						if (Generator.TASK_START_FRAME >= 0) {
-							System.out.println(">>>>>>>>>>Something went wrong - dismissing this run");
-							Generator.TASK_START_FRAME = -1;
-							Generator.TASK_FAILED = true;
-							return new PlayerAction();
-						} else {
-							Generator.TASK_START_FRAME = gs.getTime();
-							System.out.println("Task to train started");
-						}
-					}
 				}
 				if (!holds) {
 					if (Helper.DEBUG_ACTION_EXECUTION) {
 						System.out
 								.println("Task " + currentTask.name + " not applicable. Re-planning.<<<<<<<<<<<<<<<<");
 					}
-
-					if (Helper.TRAINING_MODE_ON
-							&& Generator.FUNCTION_CLASS_TO_TRAIN.equals(currentTask.GetTaskEF().getClass())
-							&& Generator.TASK_START_FRAME >= 0) {
-						Generator.TASK_FAILED = true;
-					}
-
 					currentPlan.clear();
 				}
 			}
 		}
-
-		if (Helper.TRAINING_MODE_ON && Generator.FUNCTION_CLASS_TO_TRAIN.equals(currentTask.GetTaskEF().getClass())
-				&& Generator.FUNCTION_CLASS_TO_TRAIN.equals(CollectEF.class) && Generator.TASK_START_FRAME >= 0
-				&& gs.getTime() > 500 && Helper.CURRENT_NUM_WORKERS == 0) {
-			Generator.TASK_FAILED = true;
-		}
-
 		long plannerEndTime = System.currentTimeMillis();
 		long diff = (plannerEndTime - time);
 

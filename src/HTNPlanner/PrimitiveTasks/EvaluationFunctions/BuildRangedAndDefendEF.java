@@ -4,9 +4,7 @@
  ******************************************************************************/
 package HTNPlanner.PrimitiveTasks.EvaluationFunctions;
 
-import EA.Generator;
 import HTNPlanner.Planner;
-import Test.TournamentFromArchive;
 import ai.evaluation.EvaluationFunction;
 import rts.GameState;
 import rts.PhysicalGameState;
@@ -30,83 +28,15 @@ public class BuildRangedAndDefendEF extends EvaluationFunction {
 	public float[] W_HEAVY = new float[] { 0.080792084f, -0.45121652f };
 	public float W_DIST = 0.3061873f;
 
+	private int mapsize = -1;
+	
 	public BuildRangedAndDefendEF() {
-		int mapsize = Helper.MAP_SIZE;
+		
+	}
 
-		// Get current weights from EA
-		if (Helper.TRAINING_MODE_ON) 
-		{
-			if (Generator.FUNCTION_CLASS_TO_TRAIN.equals(BuildRangedAndDefendEF.class)) 
-			{
-				RESOURCE = Generator.CURRENT_GENES[0].weightValue;
-				RESOURCE_COLLECTION = Generator.CURRENT_GENES[1].weightValue;
-
-				W_BASE[0] = Generator.CURRENT_GENES[2].weightValue;
-				W_BASE[1] = -Generator.CURRENT_GENES[3].weightValue;
-				W_BARRACKS[0] = Generator.CURRENT_GENES[4].weightValue;
-				W_BARRACKS[1] = -Generator.CURRENT_GENES[5].weightValue;
-				W_WORKER[0] = Generator.CURRENT_GENES[6].weightValue;
-				W_WORKER[1] = -Generator.CURRENT_GENES[7].weightValue;
-				W_LIGHT[0] = Generator.CURRENT_GENES[8].weightValue;
-				W_LIGHT[1] = -Generator.CURRENT_GENES[9].weightValue;
-				W_RANGE[0] = Generator.CURRENT_GENES[10].weightValue;
-				W_RANGE[1] = -Generator.CURRENT_GENES[11].weightValue;
-				W_HEAVY[0] = Generator.CURRENT_GENES[12].weightValue;
-				W_HEAVY[1] = -Generator.CURRENT_GENES[13].weightValue;
-
-				W_DIST = Generator.CURRENT_GENES[14].weightValue;
-				return;
-			} 
-			else if (Helper.USE_WEIGHTS_FROM_ARCHIVE) 
-			{
-				if (Generator.CURRENT_INDIVIDUALS[2] != null) 
-				{
-					RESOURCE = Generator.CURRENT_INDIVIDUALS[2].genes[0].weightValue;
-					RESOURCE_COLLECTION = Generator.CURRENT_INDIVIDUALS[2].genes[1].weightValue;
-
-					W_BASE[0] = Generator.CURRENT_INDIVIDUALS[2].genes[2].weightValue;
-					W_BASE[1] = -Generator.CURRENT_INDIVIDUALS[2].genes[3].weightValue;
-					W_BARRACKS[0] = Generator.CURRENT_INDIVIDUALS[2].genes[4].weightValue;
-					W_BARRACKS[1] = -Generator.CURRENT_INDIVIDUALS[2].genes[5].weightValue;
-					W_WORKER[0] = Generator.CURRENT_INDIVIDUALS[2].genes[6].weightValue;
-					W_WORKER[1] = -Generator.CURRENT_INDIVIDUALS[2].genes[7].weightValue;
-					W_LIGHT[0] = Generator.CURRENT_INDIVIDUALS[2].genes[8].weightValue;
-					W_LIGHT[1] = -Generator.CURRENT_INDIVIDUALS[2].genes[9].weightValue;
-					W_RANGE[0] = Generator.CURRENT_INDIVIDUALS[2].genes[10].weightValue;
-					W_RANGE[1] = -Generator.CURRENT_INDIVIDUALS[2].genes[11].weightValue;
-					W_HEAVY[0] = Generator.CURRENT_INDIVIDUALS[2].genes[12].weightValue;
-					W_HEAVY[1] = -Generator.CURRENT_INDIVIDUALS[2].genes[13].weightValue;
-
-					W_DIST = Generator.CURRENT_INDIVIDUALS[2].genes[14].weightValue;
-					return;
-				}
-			}
-		}
-
-		if (Helper.USE_WEIGHTS_FROM_ARCHIVE && !Helper.TRAINING_MODE_ON) 
-		{
-			if (TournamentFromArchive.CURRENT_INDIVIDUALS[2] != null) 
-			{
-				RESOURCE = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[0].weightValue;
-				RESOURCE_COLLECTION = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[1].weightValue;
-
-				W_BASE[0] = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[2].weightValue;
-				W_BASE[1] = -TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[3].weightValue;
-				W_BARRACKS[0] = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[4].weightValue;
-				W_BARRACKS[1] = -TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[5].weightValue;
-				W_WORKER[0] = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[6].weightValue;
-				W_WORKER[1] = -TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[7].weightValue;
-				W_LIGHT[0] = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[8].weightValue;
-				W_LIGHT[1] = -TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[9].weightValue;
-				W_RANGE[0] = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[10].weightValue;
-				W_RANGE[1] = -TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[11].weightValue;
-				W_HEAVY[0] = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[12].weightValue;
-				W_HEAVY[1] = -TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[13].weightValue;
-
-				W_DIST = TournamentFromArchive.CURRENT_INDIVIDUALS[2].genes[14].weightValue;
-				return;
-			}
-		}
+	private void InitValues()
+	{
+		mapsize = Helper.MAP_SIZE;
 
 		//182_4 
 		RESOURCE = 0.67960405f;
@@ -120,9 +50,13 @@ public class BuildRangedAndDefendEF extends EvaluationFunction {
 		W_HEAVY = new float[] { 0.080792084f, -0.45121652f };
 		W_DIST = 0.3061873f;
 	}
-
+	
 	@Override
 	public float evaluate(int maxplayer, int minplayer, GameState gs) {
+		if(mapsize != Helper.MAP_SIZE)
+		{
+			InitValues();
+		}
 		float baseScoreMax = base_score(maxplayer, gs);
 		float score = baseScoreMax;
 		return score;

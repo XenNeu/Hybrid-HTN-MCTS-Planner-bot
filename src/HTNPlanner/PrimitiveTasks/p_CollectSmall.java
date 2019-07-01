@@ -6,7 +6,6 @@ package HTNPlanner.PrimitiveTasks;
 
 import java.util.Vector;
 
-import EA.Generator;
 import util.Helper;
 import util.Pair;
 import HTNPlanner.AbstractGameState;
