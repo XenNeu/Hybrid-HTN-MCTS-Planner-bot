@@ -120,18 +120,17 @@ public class CollectEF extends EvaluationFunction {
 				int[][] resFF = null;
 
 				if (baseID != null) {
+					closestBase = pgs.getUnit(baseID);
 					Pair<Long, int[][]> resInfo = Helper.PER_BASE_CLOSEST_RES_INFOS.get(baseID);
 					if (resInfo != null) {
 						resID = resInfo.m_a;
 						if (Helper.MAP_SIZE == 2) {
 							resFF = resInfo.m_b;
 						}
-					}
+					}		
 				}
 
-				closestBase = pgs.getUnit(baseID);
-
-				if (resID != null) {
+				if (resID != null && pgs != null) {
 					closestRes = pgs.getUnit(resID);
 				}
 
